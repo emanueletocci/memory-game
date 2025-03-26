@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+.memory-card {
+    @apply w-24 h-24 bg-amber-500 flex items-center justify-center rounded-lg shadow-lg cursor-pointer;
+}
+
+.memory-card.flipped {
+    @apply bg-transparent;
+}
+
+.memory-card.flipped .emoji {
+    @apply block;
+}
+
+.memory-card.matched {
+    @apply cursor-default opacity-30;
+}
+
+.emoji{
+    @apply text-6xl hidden;
+}
+
