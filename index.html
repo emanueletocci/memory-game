@@ -10,7 +10,7 @@
 </head>
 <body class="font-sans bg-orange-50">
     
-    <h1 class="text-3xl font-bold text-center mt-10">Let's play<span class="hover:text-violet-500 hover:font-extrabold">Memory</span>!</h1>
+    <h1 class="text-3xl font-bold text-center mt-10">Let's play <span class="hover:text-violet-500 hover:font-extrabold">Memory</span>!</h1>
     <h2 class="text-2xl font-bold text-center mt-5">Test your brain ability!</h2>
     <h3 id="status" class="text-2xl font-bold text-center mt-5 "></h3>
 
@@ -36,7 +36,7 @@
     </div>
     <script>
         if('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/serviceworker.js', {scope: '/'})
+            navigator.serviceWorker.register("serviceworker.js", {scope: '/'})
             .then(() => console.log('Service Worker Registered'))
             .catch(err => console.log('Service Worker Registration Failed', err));
         }
