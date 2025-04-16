@@ -9,6 +9,7 @@ const gridSize = 16;
 const numPairs = gridSize / 2; 
 const emojis = allEmojis.slice(0, numPairs); 
 const cardValues = [...emojis, ...emojis]; 
+const statusDisplay = document.getElementById("status");
 
 // Variables to keep track of the flipped cards
 let isFlipped = false;
@@ -16,6 +17,29 @@ let firstCard, secondCard;
 let lockBoard = false; // Variable to lock the board
 let matchedCards = 0; // Variable to keep track of matched cards
 
+window.addEventListener("load", () => {
+    if(navigator.online){
+        statusDisplay.style.display = "none"; 
+        console.log("Online");
+    }
+    else {
+        statusDisplay.style.display = "block";
+        statusDisplay.textContent = "You're offline! Check your connection!";
+        console.log("Offline");
+    }
+  });
+  
+  window.addEventListener("offline", () => {
+    statusDisplay.style.display = "block";
+    statusDisplay.textContent = "You're offline! Check your connection!";
+    console.log("Offline");
+  });
+  
+  window.addEventListener("online", () => {
+    statusDisplay.style.display = "none";
+    console.log("Online");
+});
+  
 // Add event listener to handle click on cards
 cards.forEach(card => card.addEventListener("click", flipCard));
 
@@ -37,7 +61,6 @@ function shuffle(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
-
 
 // Function to flip cards
 function flipCard() {

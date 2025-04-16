@@ -5,13 +5,14 @@
     <title>Memory</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/memory.css">
-    <script defer src="js/memory.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍎</text></svg>">    <script defer src="js/memory.js"></script>
 </head>
 <body class="font-sans bg-orange-50">
     
     <h1 class="text-3xl font-bold text-center mt-10">Let's play <span class="hover:text-violet-500 hover:font-extrabold">Memory</span>!</h1>
-    <h2 class="text-2xl font-bold text-center mt-10">Test your brain ability!</h2>
-    
+    <h2 class="text-2xl font-bold text-center mt-5">Test your brain ability!</h2>
+    <h3 id="status" class="text-2xl font-bold text-center mt-5 "></h3>
+
     <button id="restartButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto block cursor-pointer mt-10">Restart</button>
 
     <div class="memory-ct border-violet-800 grid grid-cols-4 gap-5 w-100 h-100 self-center mx-auto mt-10">
@@ -32,6 +33,12 @@
         <div class="memory-card"></div>
         <div class="memory-card"></div>
     </div>
-
+    <script>
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('serviceworker.js')
+            .then(() => console.log('Service Worker Registered'))
+            .catch(err => console.log('Service Worker Registration Failed', err));
+        }
+    </script> 
 </body>
 </html>
