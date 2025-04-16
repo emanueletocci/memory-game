@@ -2,7 +2,7 @@ name: Deploy Memory Game to GitHub Pages
 
 on:
   push:
-    branches: ["main"]  # Cambia se il tuo branch principale ha un altro nome
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -25,12 +25,12 @@ jobs:
         run: npm install
 
       - name: Build Tailwind CSS
-        run: npx postcss css/input.css -o css/memory.css --env production
+        run: npx tailwindcss -i ./css/input.css -o ./css/memory.css --minify
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .  # Pubblica tutto il contenuto del repository (root e sottocartelle)
+          path: .  # Pubblica tutto il contenuto del repository
 
   deploy:
     needs: build
