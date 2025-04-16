@@ -1,8 +1,8 @@
-name: Deploy Memory Game to GitHub Pages
+name: Deploy PWA to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main"]  # Cambia se il tuo branch principale ha un altro nome
 
 permissions:
   contents: read
@@ -10,35 +10,21 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build CSS with PostCSS
-        run: npx postcss css/input.css -o css/memory.css
-
-      - name: Upload static site
+      - name: Upload static files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: .  # Pubblica tutto il contenuto della root del repository
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
+        id: deployment
+        with:
+          # Nessun parametro necessario per la pubblicazione standard
+          # Se vuoi pubblicare una sottocartella, cambia "path" sopra
+          # in "with: path: ./public" o simile
