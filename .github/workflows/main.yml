@@ -24,13 +24,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Tailwind CSS
-        run: npx tailwindcss -i ./css/input.css -o ./css/memory.css --minify
+      - name: Build CSS with PostCSS
+        run: npx postcss css/input.css -o css/memory.css
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .  # Pubblica tutto il contenuto del repository
+          path: .
 
   deploy:
     needs: build
@@ -41,4 +41,3 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
