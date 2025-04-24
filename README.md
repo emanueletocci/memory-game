@@ -1,4 +1,4 @@
-# ⚠️⚠️ About this repository
+# ⚠️ About this repository ⚠️
 
 This repository contains **multiple versions** of the classic Memory game, each developed with different technologies and organized into **separate branches**. 
 
