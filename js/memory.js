@@ -8,7 +8,7 @@ const allEmojis = [
 const gridSize = 16; 
 const numPairs = gridSize / 2; 
 const emojis = allEmojis.slice(0, numPairs); 
-const cardValues = [...emojis, ...emojis]; 
+const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
 const statusDisplay = document.getElementById("status");
 
 // Variables to keep track of the flipped cards
@@ -34,21 +34,11 @@ cards.forEach(card => card.addEventListener("click", flipCard));
 // Add event listener to handle click on the restart button
 document.getElementById("restartButton").addEventListener("click", resetGame);
 
-shuffle(cardValues);
-
 // Assign emojis to cards
 cards.forEach((card, index) => {
     card.innerHTML = `<span class="emoji">${cardValues[index]}</span>`;
 });
 
-
-// Function to shuffle the card values
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
 
 // Function to flip cards
 function flipCard() {
@@ -118,7 +108,6 @@ function showRestartButton() {
 // Function to reset the game
 function resetGame() {
     matchedCards = 0;
-    shuffle(cardValues);
     cards.forEach((card, index) => {
         card.classList.remove("flipped", "matched");
         card.innerHTML = `<span class="emoji">${cardValues[index]}</span>`;
