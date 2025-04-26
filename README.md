@@ -20,11 +20,16 @@ This application is designed to provide a simple, intuitive, and accessible gami
 ## Memory Game *PWA*
 
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 
 This repository contains a *Progressive Web App **(PWA)*** implementation of the classic **Memory Game**, developed using HTML, CSS, and JavaScript.
+
+<p align="center">
+  <img src="assets/screenshots/memory1.jpg" width="250"/>
+  <img src="assets/screenshots/memory2.jpg" width="250"/>
+</p>
 
 ## Getting start
 ⚠️ Make sure you have already installed ![node.js](https://nodejs.org/en)!
