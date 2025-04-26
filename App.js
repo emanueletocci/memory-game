@@ -38,12 +38,12 @@ const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
 let isFlipped = false;
 let matchedCards = 0; // Variable to keep track of matched cards
 
-const Item = ({ icon, index }) => (
-	<Pressable onPress={() => flipCard(index)}>
-		<View style={styles.item}>
-			<Text style={{ fontSize: 36 }}>{icon}</Text>
-		</View>
-	</Pressable>
+const Item = ({ icon, index, flipCard }) => (
+  <Pressable onPress={() => flipCard(index)}>
+    <View style={styles.item}>
+      <Text style={{ fontSize: 36 }}>{icon}</Text>
+    </View>
+  </Pressable>
 );
 
 const styles = StyleSheet.create({
@@ -111,23 +111,30 @@ export default function App() {
 		</View>
 	);
 
-	// Function to flip cards - DA COMPLETARE
-	function flipCard(index) {
-		console.log("Card flipped");
-		if (lockBoard) return; // Prevent flipping more than two cards
-		if (this === firstCard) return; // Prevent clicking the same card twice
+  function flipCard(id){
+    if (lockBoard || matchedCards.includes(id) || flippedCards.includes(id)) return;
 
-		if (!isFlipped) {
-			// First card flipped
-			isFlipped = true;
-			firstCard = this;
-			return;
-		}
+    const newFlipped = [...flippedCards, id];
+    setFlippedCards(newFlipped);
 
-		// Second card flipped
-		secondCard = this;
-		checkForMatch();
-	}
+    if (newFlipped.length === 2) {
+      checkForMatch(newFlipped);
+    }
+  };
+
+  function checkForMatch(flippedPair){
+    setLockBoard(true);
+    const [first, second] = flippedPair;
+    const isMatch = cards[first].emoji === cards[second].emoji;
+
+    if (isMatch) {
+      setMatchedCards([...matchedCards, first, second]);
+      resetTurn();
+    } else {
+      setTimeout(resetTurn, 1000);
+    }
+  };
+
 	// Function to reset the game
 	function resetGame() {
 		matchedCards = 0;
