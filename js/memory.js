@@ -8,8 +8,12 @@ const allEmojis = [
 const gridSize = 16; 
 const numPairs = gridSize / 2; 
 const emojis = allEmojis.slice(0, numPairs); 
-const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
 const statusDisplay = document.getElementById("status");
+let rounds = 0;
+const attemps = document.getElementById("attempts");
+
+
+let cardValues = [...emojis, ...emojis].sort(() => Math.random());
 
 // Variables to keep track of the flipped cards
 let isFlipped = false;
@@ -39,16 +43,12 @@ cards.forEach((card, index) => {
     card.innerHTML = `<span class="emoji">${cardValues[index]}</span>`;
 });
 
-
-// Function to flip cards
 function flipCard() {
-    if (lockBoard) return; // Prevent flipping more than two cards
-    if (this === firstCard) return; // Prevent clicking the same card twice
-
+    if (lockBoard) return;
+    if (this === firstCard) return;
     this.classList.add("flipped");
 
     if (!isFlipped) {
-        // First card flipped
         isFlipped = true;
         firstCard = this;
         return;
@@ -56,8 +56,13 @@ function flipCard() {
 
     // Second card flipped
     secondCard = this;
+
+    rounds++;
+    attempts.innerHTML = rounds;
+
     checkForMatch();
 }
+
 
 // Function to check for a match
 function checkForMatch() {
@@ -112,6 +117,8 @@ function resetGame() {
         card.classList.remove("flipped", "matched");
         card.innerHTML = `<span class="emoji">${cardValues[index]}</span>`;
     });
+    cardValues = [...emojis, ...emojis].sort(() => Math.random());
+
     updateBoard();
     const restartButton = document.getElementById("restartButton");
 }
