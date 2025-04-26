@@ -113,6 +113,9 @@ function showRestartButton() {
 // Function to reset the game
 function resetGame() {
     matchedCards = 0;
+    rounds = 0;
+    attemps.innerHTML = rounds;
+
     cards.forEach((card, index) => {
         card.classList.remove("flipped", "matched");
         card.innerHTML = `<span class="emoji">${cardValues[index]}</span>`;
