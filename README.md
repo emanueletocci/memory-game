@@ -27,8 +27,8 @@ This application is designed to provide a simple, intuitive, and accessible gami
 This repository contains a *Progressive Web App **(PWA)*** implementation of the classic **Memory Game**, developed using HTML, CSS, and JavaScript.
 
 <p align="center">
-  <img src="assets/screenshots/memory1.jpg" width="250"/>
-  <img src="assets/screenshots/memory2.jpg" width="250"/>
+  <img src="assets/screenshots/memory1.jpg" width="350" height="500"/>
+  <img src="assets/screenshots/memory2.jpg" width="350" height="500"/>
 </p>
 
 ## Getting start
