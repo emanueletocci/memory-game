@@ -35,16 +35,31 @@ const emojis = allEmojis.slice(0, numPairs);
 const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
 
 // Variables to keep track of the flipped cards
-let isFlipped = false;
 let matchedCards = 0; // Variable to keep track of matched cards
 
-const Item = ({ icon, index, flipCard }) => (
-  <Pressable onPress={() => flipCard(index)}>
-    <View style={styles.item}>
-      <Text style={{ fontSize: 36 }}>{icon}</Text>
-    </View>
-  </Pressable>
-);
+const Item = ({ icon }) => {
+	const [flipped, setFlipped] = useState(false); // Manca questa riga!
+	let content;
+	conent = flipCard(icon, flipped, setFlipped);
+  	// `flipped && styles.flipped` restituisce `styles.flipped` solo se `flipped` è `true`; altrimenti restituisce `false` o `undefined`, che React Native ignora	  
+	return (
+	  <Pressable onPress={() => setFlipped(!flipped)}>
+      <View style={[styles.item, flipped && styles.flipped]}>	
+		{content}
+		</View>
+	  </Pressable>
+	);
+  };
+  
+  function flipCard(icon, flipped, setFlipped) {
+	let content;
+	// Se la carta è stata girata, mostra l'icona, altrimenti mostra un quadrato vuoto
+	if (flipped) {
+	  return <Text style={{ fontSize: 36 }}>{icon}</Text>;
+	} else {
+	  return <Text style={{ fontSize: 36, color: 'transparent' }}>{icon}</Text>;
+	}
+}
 
 const styles = StyleSheet.create({
 	title: {
@@ -63,8 +78,8 @@ const styles = StyleSheet.create({
 		padding: 10,
 	},
 	item: {
-		width: 100,
-		height: 100,
+		width: 70,
+		height: 70,
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: "#FE9A00",
@@ -98,11 +113,9 @@ export default function App() {
 			<Button title="Restart" color="#2196F3" onPress={resetGame} />
 
 			<FlatList
-      	style={{ maxHeight: "500" }}
+				style={{ maxHeight: "500" }}
 				data={cardValues}
-				renderItem={({ item, index }) => (
-					<Item icon={item} index={index} flipCard={flipCard} />
-				)}
+				renderItem={({ item }) => <Item icon={item}/>}
 				keyExtractor={(_, idx) => idx.toString()}
 				numColumns={numColumns}
 				contentContainerStyle={styles.memoryCt}
@@ -111,33 +124,15 @@ export default function App() {
 		</View>
 	);
 
-  function flipCard(id){
-    if (lockBoard || matchedCards.includes(id) || flippedCards.includes(id)) return;
-
-    const newFlipped = [...flippedCards, id];
-    setFlippedCards(newFlipped);
-
-    if (newFlipped.length === 2) {
-      checkForMatch(newFlipped);
-    }
-  };
-
-  function checkForMatch(flippedPair){
-    setLockBoard(true);
-    const [first, second] = flippedPair;
-    const isMatch = cards[first].emoji === cards[second].emoji;
-
-    if (isMatch) {
-      setMatchedCards([...matchedCards, first, second]);
-      resetTurn();
-    } else {
-      setTimeout(resetTurn, 1000);
-    }
-  };
+	function checkForMatch(flippedPair) {
+		setLockBoard(true);
+		const [first, second] = flippedPair;
+		const isMatch = cards[first].emoji === cards[second].emoji;
+	}
 
 	// Function to reset the game
 	function resetGame() {
-		matchedCards = 0;
+		setMatchedCards(0);
 		cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
 		updateBoard();
 	}
