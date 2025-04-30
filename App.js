@@ -70,7 +70,6 @@ const gridSize = 16;
 const numPairs = gridSize / 2;
 const emojis = allEmojis.slice(0, numPairs);
 let cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
-let attempts = 0;
 
 export default function App() {
 	// Stato delle carte girate - segno in un array gli indici delle carte che giro
@@ -82,11 +81,12 @@ export default function App() {
 	// Stato per bloccare la board
 	const [lockBoard, setLockBoard] = useState(false);
 
+	const [attempts, setAttempts] = useState(0);
+
 	// Funzione per gestire il flip della carta
 	function handleFlip(index) {
 		if (lockBoard) return;
-		if (flippedIndexes.includes(index) || matchedIndexes.includes(index))
-			return;
+		if (flippedIndexes.includes(index)) return;
 
 		const newFlipped = [...flippedIndexes, index];
 		setFlippedIndexes(newFlipped);
@@ -103,14 +103,12 @@ export default function App() {
 		if (cardValues[firstIdx] === cardValues[secondIdx]) {
 			// Se le carte matchano, aggiungile agli abbinati
 			setMatchedIndexes((prev) => [...prev, firstIdx, secondIdx]);
-			attempts++;
+			setAttempts((prev) => prev + 1);
 		} else {
 			// Se NON matchano, rigira SOLO queste due carte dopo 1 secondo
-			setTimeout(() => {
-				setFlippedIndexes((prev) =>
-					prev.filter((idx) => idx !== firstIdx && idx !== secondIdx)
-				);
-			}, 1000);
+			setFlippedIndexes((prev) =>
+				prev.filter((idx) => idx !== firstIdx && idx !== secondIdx)
+			);
 		}
 
 		// Sblocca la board e resetta le carte girate
@@ -161,6 +159,8 @@ export default function App() {
 					setFlippedIndexes([]);
 					setMatchedIndexes([]);
 					setLockBoard(false);
+					cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+					setAttempts(0);
 				}}
 			/>
 
