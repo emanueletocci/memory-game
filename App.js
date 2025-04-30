@@ -51,20 +51,33 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FE9A00",
 		margin: 5,
 		borderRadius: 8,
+		borderWidth: 2,
+		borderColor: "#FE9A00",
 	},
 	flipped: {
-		backgroundColor: "transparent",
+		backgroundColor: "inherit",
+	},
+	boxShadow: {
+		shadowColor: "black",
+		shadowOffset: { width: -2, height: 4 },
+		shadowOpacity: 0.2,
+		shadowRadius: 3,
+		elevation: 8,
 	},
 });
 
 const gridSize = 16;
 const numPairs = gridSize / 2;
 const emojis = allEmojis.slice(0, numPairs);
-const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+let cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+let attempts = 0;
 
 export default function App() {
 	// Stato delle carte girate - segno in un array gli indici delle carte che giro
 	const [flippedIndexes, setFlippedIndexes] = useState([]); // inizializzato come array vuoto
+
+	// Stato delle carte abbinate - segno in un array gli indiici delle carte abbinate
+	const [matchedIndexes, setMatchedIndexes] = useState([]);
 
 	// Stato per bloccare la board
 	const [lockBoard, setLockBoard] = useState(false);
@@ -72,19 +85,51 @@ export default function App() {
 	// Funzione per gestire il flip della carta
 	function handleFlip(index) {
 		if (lockBoard) return;
-		if (flippedIndexes.includes(index)) return;
+		if (flippedIndexes.includes(index) || matchedIndexes.includes(index))
+			return;
 
-		// Flippa la carta
-		setFlippedIndexes((prev) => [...prev, index]); // aggiorna l'array prev aggiungendo index, ovvero l'elemento corrente
-		checkForMatch();
+		const newFlipped = [...flippedIndexes, index];
+		setFlippedIndexes(newFlipped);
+
+		if (newFlipped.length === 2) {
+			setLockBoard(true);
+			setTimeout(() => {
+				checkForMatch(newFlipped);
+			}, 1000);
+		}
 	}
 
-	function checkForMatch() {}
+	function checkForMatch([firstIdx, secondIdx]) {
+		if (cardValues[firstIdx] === cardValues[secondIdx]) {
+			// Se le carte matchano, aggiungile agli abbinati
+			setMatchedIndexes((prev) => [...prev, firstIdx, secondIdx]);
+			attempts++;
+		} else {
+			// Se NON matchano, rigira SOLO queste due carte dopo 1 secondo
+			setTimeout(() => {
+				setFlippedIndexes((prev) =>
+					prev.filter((idx) => idx !== firstIdx && idx !== secondIdx)
+				);
+			}, 1000);
+		}
+
+		// Sblocca la board e resetta le carte girate
+		setFlippedIndexes([]);
+		setLockBoard(false);
+	}
+
 	// Render della singola carta
 	function Item({ icon, index, flipped, onFlip }) {
 		return (
 			<Pressable onPress={() => onFlip(index)} disabled={flipped || lockBoard}>
-				<View style={[styles.item, flipped && styles.flipped]}>
+				<View
+					style={[
+						styles.item,
+						styles.boxShadow,
+						flipped && styles.flipped,
+						flipped && styles.boxShadow,
+					]}
+				>
 					<Text
 						style={{ fontSize: 36, color: flipped ? "black" : "transparent" }}
 					>
@@ -108,12 +153,13 @@ export default function App() {
 			<Text style={[styles.title, { fontSize: 20 }]}>
 				Test your brain ability!
 			</Text>
-			<Text style={styles.paragraph}>Attemps: 0</Text>
+			<Text style={styles.paragraph}>Attempts: {attempts} </Text>
 			<Button
 				title="Restart"
 				color="#2196F3"
 				onPress={() => {
 					setFlippedIndexes([]);
+					setMatchedIndexes([]);
 					setLockBoard(false);
 				}}
 			/>
@@ -125,7 +171,9 @@ export default function App() {
 					<Item
 						icon={item}
 						index={index}
-						flipped={flippedIndexes.includes(index)}
+						flipped={
+							flippedIndexes.includes(index) || matchedIndexes.includes(index)
+						}
 						onFlip={handleFlip}
 					/>
 				)}
