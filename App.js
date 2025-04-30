@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -29,38 +28,6 @@ const allEmojis = [
 	"🥥",
 ];
 
-const gridSize = 16;
-const numPairs = gridSize / 2;
-const emojis = allEmojis.slice(0, numPairs);
-const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
-
-// Variables to keep track of the flipped cards
-let matchedCards = 0; // Variable to keep track of matched cards
-
-const Item = ({ icon }) => {
-	const [flipped, setFlipped] = useState(false); // Manca questa riga!
-	let content;
-	conent = flipCard(icon, flipped, setFlipped);
-  	// `flipped && styles.flipped` restituisce `styles.flipped` solo se `flipped` è `true`; altrimenti restituisce `false` o `undefined`, che React Native ignora	  
-	return (
-	  <Pressable onPress={() => setFlipped(!flipped)}>
-      <View style={[styles.item, flipped && styles.flipped]}>	
-		{content}
-		</View>
-	  </Pressable>
-	);
-  };
-  
-  function flipCard(icon, flipped, setFlipped) {
-	let content;
-	// Se la carta è stata girata, mostra l'icona, altrimenti mostra un quadrato vuoto
-	if (flipped) {
-	  return <Text style={{ fontSize: 36 }}>{icon}</Text>;
-	} else {
-	  return <Text style={{ fontSize: 36, color: 'transparent' }}>{icon}</Text>;
-	}
-}
-
 const styles = StyleSheet.create({
 	title: {
 		fontWeight: "bold",
@@ -72,7 +39,6 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: "center",
 	},
-
 	memoryCt: {
 		alignSelf: "center",
 		padding: 10,
@@ -91,11 +57,44 @@ const styles = StyleSheet.create({
 	},
 });
 
+const gridSize = 16;
+const numPairs = gridSize / 2;
+const emojis = allEmojis.slice(0, numPairs);
+const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+
 export default function App() {
-	// Gli stati devero essere necessariamente definiti qui
+	// Stato delle carte girate - segno in un array gli indici delle carte che giro
+	const [flippedIndexes, setFlippedIndexes] = useState([]); // inizializzato come array vuoto
+
+	// Stato per bloccare la board
 	const [lockBoard, setLockBoard] = useState(false);
-	const [firstCard, setFirstCard] = useState(null);
-	const [secondCard, setSecondCard] = useState(null);
+
+	// Funzione per gestire il flip della carta
+	function handleFlip(index) {
+		if (lockBoard) return;
+		if (flippedIndexes.includes(index)) return;
+
+		// Flippa la carta
+		setFlippedIndexes((prev) => [...prev, index]); // aggiorna l'array prev aggiungendo index, ovvero l'elemento corrente
+		checkForMatch();
+	}
+
+	function checkForMatch() {}
+	// Render della singola carta
+	function Item({ icon, index, flipped, onFlip }) {
+		return (
+			<Pressable onPress={() => onFlip(index)} disabled={flipped || lockBoard}>
+				<View style={[styles.item, flipped && styles.flipped]}>
+					<Text
+						style={{ fontSize: 36, color: flipped ? "black" : "transparent" }}
+					>
+						{icon}
+					</Text>
+				</View>
+			</Pressable>
+		);
+	}
+
 	return (
 		<View
 			style={{
@@ -110,12 +109,26 @@ export default function App() {
 				Test your brain ability!
 			</Text>
 			<Text style={styles.paragraph}>Attemps: 0</Text>
-			<Button title="Restart" color="#2196F3" onPress={resetGame} />
+			<Button
+				title="Restart"
+				color="#2196F3"
+				onPress={() => {
+					setFlippedIndexes([]);
+					setLockBoard(false);
+				}}
+			/>
 
 			<FlatList
-				style={{ maxHeight: "500" }}
+				style={{ maxHeight: 500 }}
 				data={cardValues}
-				renderItem={({ item }) => <Item icon={item}/>}
+				renderItem={({ item, index }) => (
+					<Item
+						icon={item}
+						index={index}
+						flipped={flippedIndexes.includes(index)}
+						onFlip={handleFlip}
+					/>
+				)}
 				keyExtractor={(_, idx) => idx.toString()}
 				numColumns={numColumns}
 				contentContainerStyle={styles.memoryCt}
@@ -123,22 +136,4 @@ export default function App() {
 			/>
 		</View>
 	);
-
-	function checkForMatch(flippedPair) {
-		setLockBoard(true);
-		const [first, second] = flippedPair;
-		const isMatch = cards[first].emoji === cards[second].emoji;
-	}
-
-	// Function to reset the game
-	function resetGame() {
-		setMatchedCards(0);
-		cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
-		updateBoard();
-	}
-
-	// Function to update the board after a match
-	function updateBoard() {
-		[isFlipped, firstCard, secondCard, lockBoard] = [false, null, null, false]; // Reset the variables
-	}
 }
