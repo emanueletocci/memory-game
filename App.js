@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -103,17 +103,28 @@ export default function App() {
 		if (cardValues[firstIdx] === cardValues[secondIdx]) {
 			// Se le carte matchano, aggiungile agli abbinati
 			setMatchedIndexes((prev) => [...prev, firstIdx, secondIdx]);
-			setAttempts((prev) => prev + 1);
+			checkForWin();
 		} else {
 			// Se NON matchano, rigira SOLO queste due carte dopo 1 secondo
 			setFlippedIndexes((prev) =>
 				prev.filter((idx) => idx !== firstIdx && idx !== secondIdx)
 			);
 		}
+		setAttempts((prev) => prev + 1);
 
 		// Sblocca la board e resetta le carte girate
 		setFlippedIndexes([]);
 		setLockBoard(false);
+	}
+
+	function checkForWin() {
+		
+		React.useEffect(() => {
+			if (matchedIndexes.length === gridSize) {
+				alert("You win!");
+				console.log("Win detected");
+			}
+		}, [matchedIndexes]);
 	}
 
 	// Render della singola carta
@@ -138,6 +149,14 @@ export default function App() {
 		);
 	}
 
+	function resetGame() {
+		setFlippedIndexes([]);
+		setMatchedIndexes([]);
+		setLockBoard(false);
+		cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+		setAttempts(0);
+	}
+
 	return (
 		<View
 			style={{
@@ -156,11 +175,7 @@ export default function App() {
 				title="Restart"
 				color="#2196F3"
 				onPress={() => {
-					setFlippedIndexes([]);
-					setMatchedIndexes([]);
-					setLockBoard(false);
-					cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
-					setAttempts(0);
+					resetGame();
 				}}
 			/>
 
