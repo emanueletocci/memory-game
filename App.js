@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 		borderColor: "#FE9A00",
 	},
 	flipped: {
-		backgroundColor: "inherit",
+		backgroundColor: "white",	// android renderizza le emoji come bitmap a sfondo bianco! Non posso usare transparent
 	},
 	boxShadow: {
 		shadowColor: "black",
@@ -171,14 +171,14 @@ export default function App() {
 				Test your brain ability!
 			</Text>
 			<Text style={styles.paragraph}>Attempts: {attempts} </Text>
-			<Button
-				title="Restart"
-				color="#2196F3"
-				onPress={() => {
-					resetGame();
-				}}
-			/>
-
+			<View style={{ margin: 10 }}>
+				<Button
+					title="Restart"
+					onPress={() => {
+						resetGame();
+					}}
+				/>
+			</View>
 			<FlatList
 				style={{ maxHeight: 500 }}
 				data={cardValues}
