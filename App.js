@@ -84,6 +84,17 @@ export default function App() {
 
 	const [attempts, setAttempts] = useState(0);
 
+	// UseEffect chiama la seguente funzione ogni volta che matchedIndexes cambia. Serve in quanto il cambiamento di 
+	// stato in react é asincrono e non immediato
+	useEffect(() => {
+		if (matchedIndexes.length === gridSize) {
+		  console.log("Win condition met!");
+		  Alert.alert("WIN!", "You matched all pairs!", [
+			{ text: "OK", onPress: () => resetGame() }
+		  ]);
+		}
+	  }, [matchedIndexes]);
+	  
 	// Funzione per gestire il flip della carta
 	function handleFlip(index) {
 		if (lockBoard) return;
@@ -105,7 +116,6 @@ export default function App() {
 		if (cardValues[firstIdx] === cardValues[secondIdx]) {
 			// Se le carte matchano, aggiungile agli abbinati
 			setMatchedIndexes((prev) => [...prev, firstIdx, secondIdx]);
-			checkForWin();
 		} else {
 			// Se NON matchano, rigira SOLO queste due carte dopo 1 secondo
 			setFlippedIndexes((prev) =>
@@ -116,20 +126,6 @@ export default function App() {
 		// Sblocca la board e resetta le carte girate
 		setFlippedIndexes([]);
 		setLockBoard(false);
-	}
-
-	function checkForWin() {
-		if (matchedIndexes.length === gridSize) {
-			Alert.alert("WIN!", "You matched all pairs!", [
-				{
-					text: "OK",
-					onPress: () => {
-						resetGame();
-					},
-				},
-			]);
-			console.log("Win detected");
-		}
 	}
 
 	// Render della singola carta
