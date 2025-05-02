@@ -6,6 +6,7 @@ import {
 	Button,
 	FlatList,
 	Pressable,
+	Alert
 } from "react-native";
 
 const numColumns = 4;
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
 		borderColor: "#FE9A00",
 	},
 	flipped: {
-		backgroundColor: "white",	// android renderizza le emoji come bitmap a sfondo bianco! Non posso usare transparent
+		backgroundColor: "white", // android renderizza le emoji come bitmap a sfondo bianco! Non posso usare transparent
 	},
 	boxShadow: {
 		shadowColor: "black",
@@ -100,6 +101,7 @@ export default function App() {
 	}
 
 	function checkForMatch([firstIdx, secondIdx]) {
+		setAttempts((prev) => prev + 1);
 		if (cardValues[firstIdx] === cardValues[secondIdx]) {
 			// Se le carte matchano, aggiungile agli abbinati
 			setMatchedIndexes((prev) => [...prev, firstIdx, secondIdx]);
@@ -110,7 +112,6 @@ export default function App() {
 				prev.filter((idx) => idx !== firstIdx && idx !== secondIdx)
 			);
 		}
-		setAttempts((prev) => prev + 1);
 
 		// Sblocca la board e resetta le carte girate
 		setFlippedIndexes([]);
@@ -118,13 +119,17 @@ export default function App() {
 	}
 
 	function checkForWin() {
-		
-		React.useEffect(() => {
-			if (matchedIndexes.length === gridSize) {
-				alert("You win!");
-				console.log("Win detected");
-			}
-		}, [matchedIndexes]);
+		if (matchedIndexes.length === gridSize) {
+			Alert.alert("WIN!", "You matched all pairs!", [
+				{
+					text: "OK",
+					onPress: () => {
+						resetGame();
+					},
+				},
+			]);
+			console.log("Win detected");
+		}
 	}
 
 	// Render della singola carta
