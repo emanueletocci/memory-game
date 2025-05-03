@@ -23,5 +23,8 @@ This application is designed to provide a simple, intuitive, and accessible gami
 
 This repository contains an App implementation of the classic **Memory Game**, developed using ![React-Native](https://reactnative.dev/)
 
-
+<p align="center">
+  <img src="assets/screenshots/memory1.png" width="350" height="500"/>
+  <img src="assets/screenshots/memory2.png" width="350" height="500"/>
+</p>
 
