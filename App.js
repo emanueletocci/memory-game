@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 		borderColor: "#FE9A00",
 	},
 	flipped: {
-		backgroundColor: "white", // android renderizza le emoji come bitmap a sfondo bianco! Non posso usare transparent
+		backgroundColor: "white", // android renders emojis as bitmaps with a white background! I can't use transparent
 	},
 	boxShadow: {
 		shadowColor: "black",
@@ -76,19 +76,19 @@ const emojis = allEmojis.slice(0, numPairs);
 let cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
 
 export default function App() {
-	// Stato delle carte girate - segno in un array gli indici delle carte che giro
-	const [flippedIndexes, setFlippedIndexes] = useState([]); // inizializzato come array vuoto
+	// State for flipped cards - I keep an array of the indexes of the cards that are flipped
+	const [flippedIndexes, setFlippedIndexes] = useState([]); // initialized as an empty array
 
-	// Stato delle carte abbinate - segno in un array gli indiici delle carte abbinate
+	// State for matched cards - I keep an array of the indexes of the matched cards
 	const [matchedIndexes, setMatchedIndexes] = useState([]);
 
-	// Stato per bloccare la board
+	// State to lock the board
 	const [lockBoard, setLockBoard] = useState(false);
 
 	const [attempts, setAttempts] = useState(0);
 
-	// UseEffect chiama la seguente funzione ogni volta che matchedIndexes cambia. Serve in quanto il cambiamento di
-	// stato in react é asincrono e non immediato
+	// useEffect calls the following function every time matchedIndexes changes.
+	// This is needed since state changes in React are asynchronous and not immediate
 	useEffect(() => {
 		if (matchedIndexes.length === gridSize) {
 			console.log("Win condition met!");
@@ -98,7 +98,7 @@ export default function App() {
 		}
 	}, [matchedIndexes]);
 
-	// Funzione per gestire il flip della carta
+	// Function to handle card flip
 	function handleFlip(index) {
 		if (lockBoard) return;
 		if (flippedIndexes.includes(index)) return;
@@ -117,21 +117,21 @@ export default function App() {
 	function checkForMatch([firstIdx, secondIdx]) {
 		setAttempts((prev) => prev + 1);
 		if (cardValues[firstIdx] === cardValues[secondIdx]) {
-			// Se le carte matchano, aggiungile agli abbinati
+			// If the cards match, add them to the matched array
 			setMatchedIndexes((prev) => [...prev, firstIdx, secondIdx]);
 		} else {
-			// Se NON matchano, rigira SOLO queste due carte dopo 1 secondo
+			// If they DON'T match, flip ONLY these two cards back after 1 second
 			setFlippedIndexes((prev) =>
 				prev.filter((idx) => idx !== firstIdx && idx !== secondIdx)
 			);
 		}
 
-		// Sblocca la board e resetta le carte girate
+		// Unlock the board and reset flipped cards
 		setFlippedIndexes([]);
 		setLockBoard(false);
 	}
 
-	// Render della singola carta
+	// Render a single card
 	function Item({ icon, index, flipped, matched, onFlip }) {
 		return (
 			<Pressable onPress={() => onFlip(index)} disabled={flipped || lockBoard}>
@@ -194,7 +194,7 @@ export default function App() {
 						flipped={
 							flippedIndexes.includes(index) || matchedIndexes.includes(index)
 						}
-						matched={matchedIndexes.includes(index)} // <--- aggiungi qui
+						matched={matchedIndexes.includes(index)}
 						onFlip={handleFlip}
 					/>
 				)}
