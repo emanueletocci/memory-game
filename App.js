@@ -6,7 +6,7 @@ import {
 	Button,
 	FlatList,
 	Pressable,
-	Alert
+	Alert,
 } from "react-native";
 
 const numColumns = 4;
@@ -65,6 +65,9 @@ const styles = StyleSheet.create({
 		shadowRadius: 3,
 		elevation: 8,
 	},
+	matched: {
+		opacity: 0.7,
+	},
 });
 
 const gridSize = 16;
@@ -84,17 +87,17 @@ export default function App() {
 
 	const [attempts, setAttempts] = useState(0);
 
-	// UseEffect chiama la seguente funzione ogni volta che matchedIndexes cambia. Serve in quanto il cambiamento di 
+	// UseEffect chiama la seguente funzione ogni volta che matchedIndexes cambia. Serve in quanto il cambiamento di
 	// stato in react é asincrono e non immediato
 	useEffect(() => {
 		if (matchedIndexes.length === gridSize) {
-		  console.log("Win condition met!");
-		  Alert.alert("WIN!", "You matched all pairs!", [
-			{ text: "OK", onPress: () => resetGame() }
-		  ]);
+			console.log("Win condition met!");
+			Alert.alert("WIN!", "You matched all pairs!", [
+				{ text: "OK", onPress: () => resetGame() },
+			]);
 		}
-	  }, [matchedIndexes]);
-	  
+	}, [matchedIndexes]);
+
 	// Funzione per gestire il flip della carta
 	function handleFlip(index) {
 		if (lockBoard) return;
@@ -129,7 +132,7 @@ export default function App() {
 	}
 
 	// Render della singola carta
-	function Item({ icon, index, flipped, onFlip }) {
+	function Item({ icon, index, flipped, matched, onFlip }) {
 		return (
 			<Pressable onPress={() => onFlip(index)} disabled={flipped || lockBoard}>
 				<View
@@ -138,6 +141,7 @@ export default function App() {
 						styles.boxShadow,
 						flipped && styles.flipped,
 						flipped && styles.boxShadow,
+						matched && styles.matched,
 					]}
 				>
 					<Text
@@ -190,6 +194,7 @@ export default function App() {
 						flipped={
 							flippedIndexes.includes(index) || matchedIndexes.includes(index)
 						}
+						matched={matchedIndexes.includes(index)} // <--- aggiungi qui
 						onFlip={handleFlip}
 					/>
 				)}
