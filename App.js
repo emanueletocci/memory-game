@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 	},
 	paragraph: {
 		fontWeight: "bold",
-		fontSize: 18,
+		fontSize: 14,
 		textAlign: "center",
 	},
 	memoryCt: {
