@@ -6,6 +6,8 @@ Among the available versions, you will find a *Progressive Web App* (**PWA**) on
 
 *Check out the other branches to explore different versions of the game!*
 
+The PWA linked to this repository (see it is only a partial PWA implementation because GitHub Pages does not support service workers. However, you can still open it in a Chromium-based browser and install it!
+
 ## Main Features
 
 - **Dynamic grid**: The game features a 4x4 grid with 16 cards (8 pairs of emojis).
