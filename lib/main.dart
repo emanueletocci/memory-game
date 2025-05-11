@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-// Enrtypoint - prende in input un widget che viene inserito come root nel widget tree
 void main() {
   runApp(const MainApp());
 }
 
-// root del widget tree
+final int GRID_SIZE = 16;
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -13,20 +13,91 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // centra tutto verticalmente
-            children: [
-              Text('Hello World!'),
-              SizedBox(height: 20), // spazio tra testo e immagine
-              Image.network(
-                'https://images.unsplash.com/photo-1728044849316-b42a4b25e507?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                width: 200,
-                height: 200,
-              ),
-            ],
-          ),
+        backgroundColor: const Color(0xFFF9EFE6),
+        body: const SafeArea(
+          child: MemoryHomePage(),
         ),
+      ),
+    );
+  }
+}
+
+class MemoryHomePage extends StatelessWidget {
+  const MemoryHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 24),
+          const Text(
+            "Let's play Memory!",
+            style: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            "Test your brain ability!",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            "Attempts: 0",
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+            ),
+            child: const Text(
+              "Restart",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ),
+          const SizedBox(height: 32),
+          SizedBox(
+            width: 340,
+            child: GridView.count(
+              crossAxisCount: 4,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: List.generate(GRID_SIZE, (i) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orange.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ),
+        ],
       ),
     );
   }
