@@ -5,6 +5,25 @@ void main() {
 }
 
 const int GRID_SIZE = 16;
+const ALL_EMOJIES = [
+  "🍎",
+  "🍌",
+  "🍒",
+  "🍇",
+  "🍉",
+  "🍓",
+  "🍍",
+  "🥝",
+  "🍑",
+  "🍈",
+  "🍋",
+  "🍊",
+  "🍏",
+  "🍐",
+  "🍅",
+  "🥥"
+];
+const NUM_PAIRS = GRID_SIZE / 2;
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -68,6 +87,19 @@ class AttemptsAndGrid extends StatefulWidget {
 
 class _AttemptsAndGridState extends State<AttemptsAndGrid> {
   int attempts = 0;
+  late List<String> _shuffledEmojis;
+
+  @override
+  void initState() {
+    super.initState();
+    _generateShuffledEmojis();
+  }
+
+  void _generateShuffledEmojis() {
+    final emojis = List<String>.from(ALL_EMOJIES.take(NUM_PAIRS.toInt()));
+    _shuffledEmojis = [...emojis, ...emojis]; // crea le coppie
+    _shuffledEmojis.shuffle(); // mischia
+  }
 
   void _incrementAttempts() {
     setState(() {
@@ -78,6 +110,7 @@ class _AttemptsAndGridState extends State<AttemptsAndGrid> {
   void _restart() {
     setState(() {
       attempts = 0;
+      _generateShuffledEmojis(); // rigenera la griglia
     });
   }
 
@@ -107,7 +140,10 @@ class _AttemptsAndGridState extends State<AttemptsAndGrid> {
           ),
         ),
         const SizedBox(height: 32),
-        MemoryGrid(onCardTap: _incrementAttempts),
+        MemoryGrid(
+          onCardTap: _incrementAttempts,
+          emojis: _shuffledEmojis,
+          ),
       ],
     );
   }
@@ -116,7 +152,13 @@ class _AttemptsAndGridState extends State<AttemptsAndGrid> {
 // Widget della griglia delle card, stateless, riceve callback
 class MemoryGrid extends StatelessWidget {
   final VoidCallback onCardTap;
-  const MemoryGrid({super.key, required this.onCardTap});
+  final List<String> emojis;
+
+  const MemoryGrid({
+    super.key,
+    required this.onCardTap,
+    required this.emojis,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -129,17 +171,27 @@ class MemoryGrid extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: List.generate(GRID_SIZE, (i) {
-          return MemoryCard(onTap: onCardTap);
+          return MemoryCard(
+            onTap: onCardTap,
+            emoji: emojis[i],
+          );
         }),
       ),
     );
   }
 }
 
+
 // Widget della singola card
 class MemoryCard extends StatelessWidget {
   final VoidCallback onTap;
-  const MemoryCard({super.key, required this.onTap});
+  final String emoji;
+
+  const MemoryCard({
+    super.key,
+    required this.onTap,
+    required this.emoji,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +209,13 @@ class MemoryCard extends StatelessWidget {
             ),
           ],
         ),
+        alignment: Alignment.center,
+        child: Text(
+          emoji,
+          style: const TextStyle(fontSize: 32),
+        ),
       ),
     );
   }
 }
+
